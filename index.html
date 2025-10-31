@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HardGamers - Comparador de Precios Maximus</title>
+
+  <!-- React + Babel -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- 🎨 Estilos personalizados -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    // Iconos simplificados
+    const Search = () => <span>🔍</span>;
+    const SlidersHorizontal = () => <span>⚙️</span>;
+    const ExternalLink = () => <span>→</span>;
+    const TrendingDown = ({ className }) => <span style={{ color: className?.includes('green') ? '#16a34a' : 'inherit' }}>↓</span>;
+    const Store = () => <span>🏪</span>;
+    const Bell = () => <span>🔔</span>;
+    const Heart = ({ fill }) => <span>{fill === 'currentColor' ? '❤️' : '🤍'}</span>;
+    const X = () => <span>✕</span>;
+
+    const MAXIMUS_PRODUCTS = [
+      {
+        id: 1,
+        name: 'PROCESADOR AMD RYZEN 5 5600G 6 NUCLEOS 4.4GHZ AM4',
+        category: 'Procesadores',
+        brand: 'AMD',
+        price: 189900,
+        oldPrice: 210000,
+        stock: 15,
+        store: 'Maximus',
+        productUrl: 'https://www.maximus.com.ar/Producto/PROCESADOR-AMD-RYZEN-5-5600G-6-NUCLEOS-44GHZ-AM4/ITEM=11852/maximus.aspx',
+        image: '💻',
+        priceHistory: [230000, 220000, 210000, 199900, 189900]
+      },
+      {
+        id: 2,
+        name: 'PLACA DE VIDEO GIGABYTE RTX 4060 GAMING OC 8GB GDDR6',
+        category: 'Placas de Video',
+        brand: 'Gigabyte',
+        price: 495000,
+        oldPrice: 550000,
+        stock: 8,
+        store: 'Maximus',
+        productUrl: 'https://www.maximus.com.ar/Producto/PLACA-DE-VIDEO-GIGABYTE-RTX-4060-GAMING-OC-8GB-GDDR6/ITEM=16425/maximus.aspx',
+        image: '🎮',
+        priceHistory: [580000, 560000, 550000, 520000, 495000]
+      },
+      {
+        id: 3,
+        name: 'MEMORIA RAM KINGSTON FURY BEAST DDR4 16GB 3200MHZ',
+        category: 'Memorias RAM',
+        brand: 'Kingston',
+        price: 72900,
+        oldPrice: 85000,
+        stock: 22,
+        store: 'Maximus',
+        productUrl: 'https://www.maximus.com.ar/Producto/MEMORIA-RAM-KINGSTON-FURY-BEAST-DDR4-16GB-3200MHZ/ITEM=12458/maximus.aspx',
+        image: '🔲',
+        priceHistory: [95000, 89000, 85000, 78000, 72900]
+      },
+      {
+        id: 4,
+        name: 'DISCO SOLIDO SSD M.2 500GB KINGSTON NV2 NVME PCIE 4.0',
+        category: 'Almacenamiento',
+        brand: 'Kingston',
+        price: 54900,
+        oldPrice: 62000,
+        stock: 30,
+        store: 'Maximus',
+        productUrl: 'https://www.maximus.com.ar/Producto/DISCO-SOLIDO-SSD-M2-500GB-KINGSTON-NV2-NVME-PCIE-40/ITEM=14756/maximus.aspx',
+        image: '💾',
+        priceHistory: [68000, 65000, 62000, 58000, 54900]
+      },
+      {
+        id: 5,
+        name: 'MOTHER GIGABYTE B550M AORUS ELITE AM4',
+        category: 'Motherboards',
+        brand: 'Gigabyte',
+        price: 158900,
+        oldPrice: 180000,
+        stock: 12,
+        store: 'Maximus',
+        productUrl: 'https://www.maximus.com.ar/Producto/MOTHER-GIGABYTE-B550M-AORUS-ELITE-AM4/ITEM=11256/maximus.aspx',
+        image: '⚡',
+        priceHistory: [195000, 185000, 180000, 169000, 158900]
+      }
+    ];
+
+    const CATEGORIES = ['Todas las categorías', 'Procesadores', 'Placas de Video', 'Memorias RAM', 'Motherboards', 'Almacenamiento'];
+    const BRANDS = ['Todas', 'AMD', 'Intel', 'Gigabyte', 'Kingston', 'ASUS', 'MSI'];
+
+    function MaximusComparator() {
+      const [searchTerm, setSearchTerm] = useState('');
+      const [selectedCategory, setSelectedCategory] = useState('Todas las categorías');
+      const [selectedBrand, setSelectedBrand] = useState('Todas');
+      const [minPrice, setMinPrice] = useState('');
+      const [maxPrice, setMaxPrice] = useState('');
+      const [showFilters, setShowFilters] = useState(false);
+      const [favorites, setFavorites] = useState([]);
+      const [priceAlerts, setPriceAlerts] = useState([]);
+
+      const filteredProducts = useMemo(() => {
+        return MAXIMUS_PRODUCTS.filter(product => {
+          const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+          const matchesCategory = selectedCategory === 'Todas las categorías' || product.category === selectedCategory;
+          const matchesBrand = selectedBrand === 'Todas' || product.brand === selectedBrand;
+          const min = minPrice === '' ? 0 : parseFloat(minPrice);
+          const max = maxPrice === '' ? Infinity : parseFloat(maxPrice);
+          const matchesPrice = product.price >= min && product.price <= max;
+          return matchesSearch && matchesCategory && matchesBrand && matchesPrice;
+        }).sort((a, b) => a.price - b.price);
+      }, [searchTerm, selectedCategory, selectedBrand, minPrice, maxPrice]);
+
+      const formatPrice = (price) => `$ ${price.toLocaleString('es-AR')}`;
+      const calculateDiscount = (oldPrice, newPrice) => Math.round(((oldPrice - newPrice) / oldPrice) * 100);
+
+      const toggleFavorite = (productId) => {
+        setFavorites(prev => prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]);
+      };
+
+      const addPriceAlert = (productId) => {
+        if (!priceAlerts.includes(productId)) {
+          setPriceAlerts(prev => [...prev, productId]);
+          alert('¡Alerta de precio activada! Te notificaremos cuando baje el precio.');
+        }
+      };
+
+      return (
+        <div className="min-h-screen bg-white">
+          <header className="bg-orange-500 shadow-md">
+            <div className="max-w-7xl mx-auto px-4 py-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="text-white text-3xl font-bold">HG</div>
+                  <div>
+                    <h1 className="text-white text-xl font-bold leading-tight">HardGamers</h1>
+                    <p className="text-orange-100 text-xs">Comparador de Precios</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <button className="text-white hover:text-orange-100 relative">
+                      <Heart fill={favorites.length > 0 ? "currentColor" : "none"} />
+                      {favorites.length > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                          {favorites.length}
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* Filtros */}
+          <div className="bg-gray-50 border-b">
+            <div className="max-w-7xl mx-auto px-4 py-4">
+              <div className="flex items-center gap-4">
+                <button onClick={() => setShowFilters(!showFilters)} className="text-gray-600 hover:text-orange-500 flex items-center gap-1">
+                  <SlidersHorizontal /> Filtros
+                </button>
+                {showFilters && (
+                  <div className="flex gap-4 items-center flex-wrap">
+                    <input type="text" placeholder="Buscar producto..." className="border rounded-md px-2 py-1"
+                      value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="border rounded-md px-2 py-1">
+                      {CATEGORIES.map(category => <option key={category} value={category}>{category}</option>)}
+                    </select>
+                    <select value={selectedBrand} onChange={(e) => setSelectedBrand(e.target.value)} className="border rounded-md px-2 py-1">
+                      {BRANDS.map(brand => <option key={brand} value={brand}>{brand}</option>)}
+                    </select>
+                    <input type="number" placeholder="Precio mínimo" className="border rounded-md px-2 py-1"
+                      value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
+                    <input type="number" placeholder="Precio máximo" className="border rounded-md px-2 py-1"
+                      value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Productos */}
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="border rounded-lg p-4 bg-white shadow-lg hover:shadow-xl">
+                  <div className="flex justify-between items-center">
+                    <div className="text-gray-600 font-semibold">{product.category}</div>
+                    <div className="text-orange-500 text-lg">{formatPrice(product.price)}</div>
+                  </div>
+                  <div className="text-center py-4">
+                    <div className="text-6xl">{product.image}</div>
+                    <h2 className="font-semibold text-lg mt-2">{product.name}</h2>
+                    <p className="text-gray-500 text-sm">{product.brand}</p>
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                    <div className="text-sm text-gray-500">Stock: {product.stock}</div>
+                    <div className="flex gap-2">
+                      <button className={`text-xl ${favorites.includes(product.id) ? 'text-red-500' : 'text-gray-500'}`}
+                        onClick={() => toggleFavorite(product.id)}>
+                        <Heart fill={favorites.includes(product.id) ? 'currentColor' : 'none'} />
+                      </button>
+                      <button className="text-xl text-gray-500 hover:text-orange-500" onClick={() => addPriceAlert(product.id)}>
+                        <Bell />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-right">
+                    {product.oldPrice > product.price && (
+                      <span className="text-sm text-green-600">{calculateDiscount(product.oldPrice, product.price)}% OFF</span>
+                    )}
+                    <div className="mt-2">
+                      <a href={product.productUrl} target="_blank" rel="noopener noreferrer"
+                        className="text-blue-500 hover:text-blue-600 text-sm flex items-center justify-end">
+                        Comprar ahora <ExternalLink />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Alerta de precios */}
+          <div className="fixed bottom-4 right-4 bg-orange-500 text-white text-sm p-2 rounded-full shadow-lg cursor-pointer">
+            <div className="flex items-center gap-2">
+              <span>Activar alerta de precio</span>
+              <Bell />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<MaximusComparator />, document.getElementById('root'));
+  </script>
+</body>
+
+</html>
