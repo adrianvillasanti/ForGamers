@@ -63,4 +63,95 @@ Promueve la **transparencia de precios** y el acceso informado a productos tecno
 | **Base de datos (opcional)** | MySQL |
 
 ---
+# 🔴 Diagrama de Clases (Mermaid UML)
 
+
+```mermaid
+classDiagram
+class Producto {
+    +id
+    +nombre
+    +categoria
+    +marca
+    +precio
+    +precioAnterior
+    +stock
+    +tienda
+    +urlProducto
+    +imagen
+    +calcularDescuento
+    +mostrarInfo
+}
+
+class HistorialPrecio {
+    +id
+    +productoId
+    +precio
+    +fechaRegistro
+    +registrarCambio
+}
+
+class Favorito {
+    +id
+    +usuarioId
+    +productoId
+    +fechaAgregado
+}
+
+class AlertaPrecio {
+    +id
+    +usuarioId
+    +productoId
+    +precioObjetivo
+    +fechaCreacion
+    +activarAlerta
+}
+
+Producto "1" --> "N" HistorialPrecio
+Producto "1" --> "N" Favorito
+Producto "1" --> "N" AlertaPrecio
+```
+---
+# 🔴  Diagrama de Base de Datos
+```mermaid
+erDiagram
+    PRODUCTOS {
+        int id PK
+        string nombre
+        string categoria
+        string marca
+        decimal precio
+        decimal precio_anterior
+        int stock
+        string tienda
+        string url_producto
+        string imagen
+        datetime fecha_actualizacion
+    }
+
+    HISTORIAL_PRECIOS {
+        int id PK
+        int producto_id FK
+        decimal precio
+        date fecha_registro
+    }
+
+    FAVORITOS {
+        int id PK
+        int usuario_id
+        int producto_id FK
+        datetime fecha_agregado
+    }
+
+    ALERTAS_PRECIO {
+        int id PK
+        int usuario_id
+        int producto_id FK
+        decimal precio_objetivo
+        datetime fecha_creacion
+    }
+
+    PRODUCTOS ||--o{ HISTORIAL_PRECIOS : "tiene"
+    PRODUCTOS ||--o{ FAVORITOS : "puede estar en"
+    PRODUCTOS ||--o{ ALERTAS_PRECIO : "asociado a"
+```
