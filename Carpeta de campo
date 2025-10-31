@@ -1,0 +1,94 @@
+Carpeta de Campo: Desarrollo de Plataforma de Gestión de Componentes de Computadoras
+
+Proyecto: Metabuscador de Componentes de Computadoras
+Metodología: Scrum
+Integrantes del Equipo:
+Facundo Laime, Judas Pinaya, Gabriel Fernández, Adrian Villasanti
+
+
+| Rol                  | Integrante                            | Responsabilidad                                                                      |
+ -------------------- | ------------------------------------- | ------------------------------------------------------------------------------------ 
+ Product Owner         Gabriel Fernández                        : Definir requisitos, priorizar backlog y comunicar visión del producto.               
+ Scrum Master           Adrian Villasanti                          :Facilitar reuniones, eliminar impedimentos y garantizar la metodología Scrum.        
+ Equipo de Desarrollo   judas pinaya & Facundo Laime : Desarrollo frontend y backend, integración de funcionalidades, pruebas y despliegue. 
+
+
+
+Reuniones Scrum 
+1. Daily Scrum
+
+Objetivo: Seguimiento de tareas del sprint actual.
+
+Situación: Sprint 2 – Funcionalidad de búsqueda y filtrado.
+
+Participantes: Adrian (SM), Gabriel (PO), Facundo y Judas (Equipo de Desarrollo)
+
+Desarrollo:
+
+Facundo: “Ayer implementé el filtro por precio en React. Hoy voy a integrar el filtro por marca usando hooks.”
+
+Judas: “Estoy revisando los endpoints de Node.js/Express para traer los productos desde MongoDB. Encontré un bug en el stock que voy a corregir hoy.”
+
+Adrian (SM): “Perfecto, si necesitan soporte para la conexión backend-frontend, puedo ayudarlos. Recuerden actualizar el tablero de tareas.”
+
+Gabriel (PO): “El filtro por precio se ve bien, pero quiero asegurarme de que los resultados estén correctamente ordenados de menor a mayor.”
+
+
+
+2. Sprint Planning
+
+Objetivo: Definir tareas y objetivos para el próximo sprint.
+
+Situación: Sprint 3 – Registro y gestión de productos por proveedores.
+
+Participantes: Adrian (SM), Gabriel (PO), Facundo y Judas (Equipo de Desarrollo)
+
+Desarrollo:
+
+Gabriel (PO): “El objetivo del sprint es permitir que los proveedores registren y editen sus productos. Debemos incluir formulario de ingreso, panel de administración en React y validaciones en Node.js.”
+
+Adrian (SM): “Distribuyamos tareas: Facundo puede encargarse de los endpoints de Node.js y Judas del panel de administración en React. Haremos revisiones conjuntas cada dos días.”
+
+Facundo: “Voy a crear las rutas POST, PUT, DELETE y GET para productos y conectarlas con MongoDB.”
+
+Judas: “Yo voy a implementar los formularios y la validación en React. También haré pruebas con datos reales.”
+
+
+3. Sprint Review
+
+Objetivo: Mostrar lo desarrollado y recibir feedback.
+
+Situación: Sprint 4 – Integración de pagos entre proveedores.
+
+Participantes: Adrian (SM), Gabriel (PO), Facundo y Judas (Equipo de Desarrollo)
+
+Desarrollo:
+
+Judas: “Hemos integrado Stripe con Node.js para permitir pagos entre proveedores. También tenemos endpoints seguros para manejar transacciones.”
+
+Gabriel (PO): “Funciona correctamente, pero necesitamos agregar confirmaciones visuales en React y notificaciones por correo usando Nodemailer.”
+
+Facundo: “Podemos mostrar alertas en tiempo real en la UI cuando un pago se complete exitosamente.”
+
+Adrian (SM): “Registramos estas mejoras para el próximo sprint y aseguramos que todo quede documentado.”
+
+
+
+4. Sprint Retrospective
+
+Objetivo: Evaluar el sprint y definir acciones de mejora.
+
+Situación: Sprint 2 – Funcionalidad de búsqueda y filtrado.
+
+Participantes: Adrian (SM), Gabriel (PO), Facundo y Judas (Equipo de Desarrollo)
+
+Desarrollo:
+
+Facundo: “El sprint fue productivo, pero nos retrasamos un día por un bug en la API de productos.”
+
+Judas: “Sugiero revisiones diarias más cortas para detectar errores en el código JS antes de que se acumulen.”
+
+Gabriel (PO): “Podemos mejorar la comunicación sobre dependencias entre los endpoints de Node.js y los componentes React.”
+
+Adrian (SM): “Propongo documentar mejor los endpoints, rutas y hooks usados para que quede más claro qué espera cada parte.”
+
