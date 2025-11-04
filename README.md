@@ -1,6 +1,6 @@
 # ForGamers
 
-<h1 style="color:red;"> HardGamers – Comparador de precios de hardware</h1>
+<h1 style="color:red;"> ForGamers  – Comparador de precios de hardware</h1>
 
 ---
 
