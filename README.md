@@ -58,7 +58,7 @@ Promueve la **transparencia de precios** y el acceso informado a productos tecno
 | **Frontend** | React + Vite + TailwindCSS |
 | **Gráficos** | Recharts (historial de precios) |
 | **Control de versiones** | Git / GitHub |
-| **Gestión del proyecto** | Trello |
+| **Gestión del proyecto** | Trello / Googel Docs.|
 | **Hosting** | Vercel |
 | **Base de datos (opcional)** | MySQL |
 
